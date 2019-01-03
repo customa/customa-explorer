@@ -1,0 +1,267 @@
+:root {
+	--font-focus: #ffffff;
+	--font-disabled: #999999;
+	--font-primary: #cdcdcd;
+	--font-secondary: #bbb;
+	--font-divider: #777777;
+}
+
+html, body {
+	width: 100vw;
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	background: var(--ColBackground2);
+	color: var(--font-primary);
+	overflow: hidden;
+	font-family: Montserrat, sans-serif;
+	font-size: 1em;
+	-webkit-user-select: none;
+	        user-select: none;
+}
+
+body {
+	display: flex;
+}
+
+@font-face {
+	font-family: Montserrat;
+	src: url("font/Montserrat-Regular.ttf");
+}
+
+@font-face {
+	font-family: Montserrat;
+	src: url("font/Montserrat-Bold.ttf");
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: Montserrat;
+	src: url("font/Montserrat-Italic.ttf");
+	font-style: italic;
+}
+
+/* util */
+
+.hidden {
+	pointer-events: none;
+	opacity: 0;
+}
+
+/* sidebar */
+
+.filelist {
+	padding: 0 2vw;
+	font-size: 1em;
+}
+
+.filelist * {
+	color: var(--font-secondary);
+	transition: color 0.1s;
+	display: -webkit-box;
+	-webkit-box-align: center;
+	cursor: pointer;
+}
+
+.filelist *[disabled] {
+	color: var(--font-disabled) !important;
+	cursor: not-allowed;
+}
+
+.filelist *:hover {
+	color: var(--font-focus);
+}
+
+.filelist:not(.no-icons) *::before {
+	content: "";
+	height: 1em;
+	width: 1em;
+	margin-right: 3px;
+	background: url("img/files/generic.svg") center / cover;
+	display: block;
+}
+
+.filelist:not(.no-icons) *.folder::before { background: url("img/files/folder.svg") center / cover; }
+
+/* "controls" */
+
+.button-small {
+	height: 1.5em;
+	padding: 0 0.4em;
+	font-size: 0.8em;
+	background-color: rgba(255, 255, 255, 0);
+	display: block;
+	cursor: default;
+	transition: background-color 0.1s;
+}
+
+.button-small:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* context menus */
+
+.context {
+	min-width: 8em;
+	padding: 0.5em 0;
+	background: #1a1a1a;
+	color: var(--font-primary);
+	font-size: 0.9em;
+	position: absolute;
+	z-index: 1000;
+	transition: opacity 0.2s;
+}
+
+.context > .context-item {
+	padding: 0.2em 0.8em;
+	padding-right: 2.7em;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.context > .context-item:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.context > .divider {
+	height: 1px;
+	margin: 0.25em 0.5em;
+	background: var(--font-divider);
+}
+
+/* dialogs */
+
+.dialog {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	position: absolute;
+	z-index: 10;
+	transition: opacity 0.2s;
+}
+
+.dialog > *:first-child {
+	margin: 10vh 10vw;
+	flex: 1;
+}
+
+.dialog > *:first-child::before {
+	content: "";
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+	top: 0;
+	left: 0;
+	z-index: -1;
+	position: absolute;
+	display: block;
+}
+
+/* layout */
+
+.wrapper {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.wrapper > .content {
+	flex: 1;
+	display: flex;
+}
+
+.wrapper > .content > .container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.wrapper > .content > .container > .main {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	display: flex;
+}
+
+.wrapper > .content > .sidebar {
+	min-width: 200px;
+	max-width: 90vw;
+	background: var(--ColBackground1);
+	display: flex;
+	flex-direction: row;
+}
+
+.sidebar > .content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.sidebar > .content > .filelist {
+	flex: 1;
+}
+
+.sidebar > .handle {
+	width: 4px;
+	cursor: e-resize;
+}
+
+.wrapper > .titlebar {
+	height: 48px;
+	background: var(--ColAppBackground);
+	display: flex;
+	flex-direction: column;
+}
+
+.titlebar > .content {
+	height: 23px;
+	margin: 4px;
+	margin-bottom: 0;
+	display: flex;
+}
+
+.titlebar > .content > div:first-child { margin-left: 3px; }
+.titlebar > .content > div:last-child { margin-right: 3px; }
+
+.titlebar > .content > .text {
+	height: 23px;
+	flex: 1;
+	display: -webkit-box;
+	-webkit-box-align: center;
+	-webkit-app-region: drag;
+}
+
+.titlebar > .content > .text::before {
+	content: "";
+	height: 20px;
+	width: 20px;
+	margin-right: 3px;
+	background: url("img/icon-svg.svg") center / cover;
+	display: block;
+}
+
+.titlebar > .content > .button {
+	width: 23px;
+	height: 23px;
+	background-color: rgba(255, 255, 255, 0);
+	transition: background-color 0.1s;
+}
+
+.titlebar > .content > .button-maximize { background: url("img/action-maximize-64.png") center / cover; }
+.titlebar > .content > .button-maximized { background: url("img/action-maximized-64.png") center / cover; }
+.titlebar > .content > .button-minimize { background: url("img/action-minimize-64.png") center / cover; }
+.titlebar > .content > .button-close { background: url("img/action-close-64.png") center / cover; }
+
+.titlebar > .content > .button:hover { background-color: rgba(255, 255, 255, 0.2); }
+.titlebar > .content > .button-danger:hover { background-color: rgba(255, 0, 0, 0.2); }
+
+.titlebar > .menu {
+	height: 20px;
+	margin-bottom: 3px;
+	color: var(--font-secondary);
+}
+
+.titlebar > .menu > .menu-item {
+	height: 20px !important;
+	display: inline-block;
+}
