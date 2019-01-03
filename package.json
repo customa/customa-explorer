@@ -1,0 +1,23 @@
+{
+  "name": "customa-explorer",
+  "version": "1.0.0",
+  "description": "The most customizable file explorer. Themes, plugins, and built in Electron.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Customa/Customa-Explorer.git"
+  },
+  "author": "Customa Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Customa/Customa-Explorer/issues"
+  },
+  "homepage": "https://github.com/Customa/Customa-Explorer#readme",
+  "dependencies": {
+    "electron": "^4.0.0",
+    "electron-json-storage": "^4.1.5"
+  }
+}
