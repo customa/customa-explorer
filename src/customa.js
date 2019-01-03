@@ -66,6 +66,7 @@ const menus = {
 
 let settings; // this should be const but callbacks are a fucking gay in the ass
 
+let currentDir = "C:"
 let sidebarResizing = false;
 
 getSettings().then((_settings) => {
@@ -142,8 +143,7 @@ getSettings().then((_settings) => {
 
 function updateWorkspace() {
 	generateMenu(menus);
-
-	setTitle(editor.workspaceName);
+	setTitle("Despacito");
 }
 
 function showDialog(dialog) {
