@@ -3,6 +3,7 @@ const storage = require("electron-json-storage");
 const remote = require("electron").remote;
 const w = remote.getCurrentWindow();
 const { dialog, shell } = remote;
+
 const components = {
 	title: document.getElementById("title"),
 	altmenu: document.getElementById("altmenu"),
@@ -66,9 +67,12 @@ const menus = {
 	}
 }
 
+const pathDivider = process.platform == "win32" ? "\\" : "/";
+const pathDefault = process.platform == "win32" ? "C:" : "/";
+
 let settings;
 
-let currentDir = process.platform == "win32" ? "C:" : "/";
+let currentDir = pathDefault + "";
 let sidebarResizing = false;
 
 getSettings().then((_settings) => {
@@ -151,9 +155,7 @@ function updateAll() {
 }
 
 function updateFileview() {
-	const path = process.platform == "win32" ?
-		currentDir.endsWith("\\") ? currentDir : currentDir + "\\" :
-		currentDir.endsWith("/") ? currentDir : currentDir + "/";
+	let path = currentDir = currentDir.endsWith(pathDivider) ? currentDir : currentDir + pathDivider;
 
 	components.fileView.innerHTML = "";
 
@@ -163,9 +165,13 @@ function updateFileview() {
 		item.classList.add("no-icon");
 
 		item.addEventListener("click", () => {
-			let x = currentDir.split("\\");
+			let x = currentDir.split(pathDivider);
 			x.pop();
-			currentDir = x.join("\\");
+			currentDir = x.join(pathDivider);
+
+			if (currentDir.length == 0)
+				currentDir = pathDefault + "";
+
 			updateAll();
 		});
 
@@ -201,11 +207,6 @@ function updateFileview() {
 
 		components.fileView.appendChild(item);
 	});
-}
-
-function updateWorkspace() {
-	generateMenu(menus);
-	setTitle("Despacito");
 }
 
 function showDialog(dialog) {
