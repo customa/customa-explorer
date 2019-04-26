@@ -33,40 +33,42 @@ const menus = {
 	"File": {
 		"New File": undefined,		// new file
 		"New": undefined,			// list of new items
-		"divider0": "-",			//
+		"_0": "-",					//
 		"Save": undefined,			// save (but autosave tho)
 		"Save As": undefined,		// save as a different file
-		"divider1": "-",			//
+		"_1": "-",					//
 		"Open File": undefined,		// open a file
 		"Open Project": undefined,	// open a folder
 		"Open Recent": undefined,	// open a recent file or project
-		"divider2": "-",			//
-		"Import": undefined			// copy file from another project
+		"_2": "-",					//
+		"Import": undefined,		// copy file from another project
 	},
 	"Edit": {
 		"Cut": undefined,	// cut to clipboard
 		"Copy": undefined,	// copy to clipboard
-		"Paste": undefined	// paste from clipboard
+		"Paste": undefined,	// paste from clipboard
+		"_0": "-",
+		"Preferences": undefined,
 	},
 	"View": {
 		"Side Bar": undefined,		// toggle sidebar
 		"Status Bar": undefined,	// toggle status bar
-		"divider0": "-",			//
-		"Editor": undefined			// toggle main editor (why did I think)
+		"_0": "-",					//
+		"Editor": undefined,		// toggle main editor (why did I think)
 	},
 	"Tools": {
 		"Refresh": () => window.location.reload(),				// refresh window
-		"divider0": "-",										//
-		"Extensions": () => showDialog(dialogs.extensions())	// open extensions dialog
+		"_0": "-",												//
+		"Extensions": () => showDialog(dialogs.extensions()),	// open extensions dialog
 	},
 	"Help": {
-		"About": () => showDialog(dialogs.about())	// about application
+		"About": () => showDialog(dialogs.about()),	// about application
 	}
 }
 
-let settings; // this should be const but callbacks are a fucking gay in the ass
+let settings;
 
-let currentDir = "C:"
+let currentDir = process.platform == "win32" ? "C:" : "/";
 let sidebarResizing = false;
 
 getSettings().then((_settings) => {
@@ -138,8 +140,68 @@ getSettings().then((_settings) => {
 		}
 	}
 
-	updateWorkspace();
+	updateAll();
 });
+
+function updateAll() {
+	updateFileview();
+
+	generateMenu(menus);
+	setTitle(currentDir);
+}
+
+function updateFileview() {
+	const path = process.platform == "win32" ?
+		currentDir.endsWith("\\") ? currentDir : currentDir + "\\" :
+		currentDir.endsWith("/") ? currentDir : currentDir + "/";
+
+	components.fileView.innerHTML = "";
+
+	{ // .. button
+		let item = document.createElement("div");
+		item.innerText = "..";
+		item.classList.add("no-icon");
+
+		item.addEventListener("click", () => {
+			let x = currentDir.split("\\");
+			x.pop();
+			currentDir = x.join("\\");
+			updateAll();
+		});
+
+		components.fileView.appendChild(item);
+	}
+
+	fs.readdirSync(path).forEach((f) => {
+		let item = document.createElement("div");
+		item.innerText = f;
+
+		let stats;
+
+		try {
+			stats = fs.statSync(path + f);
+		} catch (e) {
+			console.error(e);
+			return;
+		}
+
+		if (stats.isFile()) {
+			let extension = f.split(".")[f.split(".").length - 1];
+			if (extension.includes(" ")) extension = "";
+
+			if (extension != "") item.classList.add(`file-extension-${extension}`);
+		} else {
+			item.classList.add("folder");
+
+			item.addEventListener("click", () => {
+				currentDir = path + f;
+				updateAll();
+			});
+		}
+
+		components.fileView.appendChild(item);
+	});
+}
 
 function updateWorkspace() {
 	generateMenu(menus);

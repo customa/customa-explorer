@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow } = require("electron");
 const storage = require("electron-json-storage");
 const path = require("path");
 const url = require("url");
@@ -39,19 +39,22 @@ function getSettings() {
 async function createWindow() {
 	getSettings().then((settings) => {
 		window = new BrowserWindow({
-			icon: path.join(__dirname, 'src/img/icon.png'),
+			icon: path.join(__dirname, "src/img/icon.png"),
 			minWidth: 800,
 			minHeight: 600,
 			resizable: true,
 			title: "Customa Explorer",
 			backgroundColor: settings.colors.ColAppBackground,
-			frame: false
+			frame: false,
+			webPreferences: {
+				nodeIntegration: true,
+			},
 		});
 	
 		window.loadURL(url.format({
-			pathname: path.join(__dirname, 'src/index.html'),
+			pathname: path.join(__dirname, "src/index.html"),
 			protocol: "file:",
-			slashes: true
+			slashes: true,
 		}));
 	
 		window.focus();
